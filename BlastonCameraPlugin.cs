@@ -18,6 +18,7 @@ OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 using System.IO;
 using System;
 using UnityEngine;
+using System.Collections.Generic;
 using BlastonCameraBehaviour.Config;
 
 namespace BlastonCameraBehaviour
@@ -76,6 +77,29 @@ namespace BlastonCameraBehaviour
             } catch (Exception e)
             {
                 Debug.LogError(e);
+            }
+
+            Debug.Log("Try Input API =============================");
+
+            var joystickNames = Input.GetJoystickNames();
+
+            Debug.Log("Joystick count: " + joystickNames.Length);
+
+            for(var i = 0; i < joystickNames.Length; i++)
+            {
+                Debug.Log("Joystick " + i + ", name: " + joystickNames[i]);
+            }
+
+            Debug.Log("Try XR Input =============================");
+
+            var inputDevices = new List<UnityEngine.XR.InputDevice>();
+            UnityEngine.XR.InputDevices.GetDevices(inputDevices);
+
+            Debug.Log("XR Input Device Count: " + inputDevices.Count);
+
+            foreach (var device in inputDevices)
+            {
+                Debug.Log(string.Format("Device found with name '{0}' and role '{1}'", device.name, device.role.ToString()));
             }
         }
 
