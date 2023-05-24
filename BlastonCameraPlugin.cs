@@ -18,8 +18,8 @@ OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 using System.IO;
 using System;
 using UnityEngine;
-using System.Collections.Generic;
 using BlastonCameraBehaviour.Config;
+using Valve.VR;
 
 namespace BlastonCameraBehaviour
 {
@@ -78,29 +78,44 @@ namespace BlastonCameraBehaviour
             {
                 Debug.LogError(e);
             }
+        }
 
-            Debug.Log("Try Input API =============================");
-
-            var joystickNames = Input.GetJoystickNames();
-
-            Debug.Log("Joystick count: " + joystickNames.Length);
-
-            for(var i = 0; i < joystickNames.Length; i++)
+        private bool GetPressDown(Controller.DeviceRelation deviceRelation, ulong buttonMask)
+        {
+            var deviceIndex = Controller.GetDeviceIndex(deviceRelation);
+            if (deviceIndex != -1 && Controller.Input(deviceIndex).GetPressDown(buttonMask))
             {
-                Debug.Log("Joystick " + i + ", name: " + joystickNames[i]);
+                return true;
             }
 
-            Debug.Log("Try XR Input =============================");
+            return false;
+        }
 
-            var inputDevices = new List<UnityEngine.XR.InputDevice>();
-            UnityEngine.XR.InputDevices.GetDevices(inputDevices);
-
-            Debug.Log("XR Input Device Count: " + inputDevices.Count);
-
-            foreach (var device in inputDevices)
+        private bool GetPressDown(Controller.DeviceRelation deviceRelation, EVRButtonId buttonId)
+        {
+            var deviceIndex = Controller.GetDeviceIndex(deviceRelation);
+            if (deviceIndex != -1 && Controller.Input(deviceIndex).GetPressDown(buttonId))
             {
-                Debug.Log(string.Format("Device found with name '{0}' and role '{1}'", device.name, device.role.ToString()));
+                return true;
             }
+
+            return false;
+        }
+
+
+        private string GetStringProperty(CVRSystem system, uint deviceIndex, ETrackedDeviceProperty prop)
+        {
+            var error = ETrackedPropertyError.TrackedProp_Success;
+            var capacity = system.GetStringTrackedDeviceProperty(deviceIndex, prop, null, 0, ref error);
+
+            if (capacity > 1)
+            {
+                var result = new System.Text.StringBuilder((int) capacity);
+                system.GetStringTrackedDeviceProperty(deviceIndex, prop, result, capacity, ref error);
+                return result.ToString();
+            }
+
+            return (error != ETrackedPropertyError.TrackedProp_Success) ? error.ToString() : "<unknown>";
         }
 
         // OnSettingsDeserialized is called only when the user has changed camera profile or when the.
@@ -126,6 +141,31 @@ namespace BlastonCameraBehaviour
             {
                 Transform camera = config.motions["default"].Transform(Time.deltaTime);
                 _helper.UpdateCameraPose(camera.position, camera.rotation, _settings.fov);
+            }
+
+            if (GetPressDown(Controller.DeviceRelation.Leftmost, Controller.ButtonMask.Trigger))
+            {
+                Debug.Log("Left trigger pressed!");
+            }
+
+            if (GetPressDown(Controller.DeviceRelation.Leftmost, Controller.ButtonMask.Grip))
+            {
+                Debug.Log("Left grip pressed!");
+            }
+
+            if (GetPressDown(Controller.DeviceRelation.Leftmost, EVRButtonId.k_EButton_A))
+            {
+                Debug.Log("Left A pressed!");
+            }
+
+            if (GetPressDown(Controller.DeviceRelation.Rightmost, Controller.ButtonMask.Trigger))
+            {
+                Debug.Log("Right trigger pressed!");
+            }
+
+            if (GetPressDown(Controller.DeviceRelation.Rightmost, Controller.ButtonMask.Grip))
+            {
+                Debug.Log("Right grip pressed!");
             }
         }
 
