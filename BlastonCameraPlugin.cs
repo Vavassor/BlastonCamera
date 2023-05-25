@@ -59,6 +59,7 @@ namespace BlastonCameraBehaviour
         // Localy store the camera helper provided by LIV.
         PluginCameraHelper _helper;
         Config.Config config;
+        ActionController actionController;
 
         // Constructor is called when plugin loads
         public BlastonCameraPlugin()
@@ -78,44 +79,9 @@ namespace BlastonCameraBehaviour
             {
                 Debug.LogError(e);
             }
-        }
 
-        private bool GetPressDown(Controller.DeviceRelation deviceRelation, ulong buttonMask)
-        {
-            var deviceIndex = Controller.GetDeviceIndex(deviceRelation);
-            if (deviceIndex != -1 && Controller.Input(deviceIndex).GetPressDown(buttonMask))
-            {
-                return true;
-            }
-
-            return false;
-        }
-
-        private bool GetPressDown(Controller.DeviceRelation deviceRelation, EVRButtonId buttonId)
-        {
-            var deviceIndex = Controller.GetDeviceIndex(deviceRelation);
-            if (deviceIndex != -1 && Controller.Input(deviceIndex).GetPressDown(buttonId))
-            {
-                return true;
-            }
-
-            return false;
-        }
-
-
-        private string GetStringProperty(CVRSystem system, uint deviceIndex, ETrackedDeviceProperty prop)
-        {
-            var error = ETrackedPropertyError.TrackedProp_Success;
-            var capacity = system.GetStringTrackedDeviceProperty(deviceIndex, prop, null, 0, ref error);
-
-            if (capacity > 1)
-            {
-                var result = new System.Text.StringBuilder((int) capacity);
-                system.GetStringTrackedDeviceProperty(deviceIndex, prop, result, capacity, ref error);
-                return result.ToString();
-            }
-
-            return (error != ETrackedPropertyError.TrackedProp_Success) ? error.ToString() : "<unknown>";
+            actionController = new ActionController();
+            actionController.Init();
         }
 
         // OnSettingsDeserialized is called only when the user has changed camera profile or when the.
@@ -143,29 +109,26 @@ namespace BlastonCameraBehaviour
                 _helper.UpdateCameraPose(camera.position, camera.rotation, _settings.fov);
             }
 
-            if (GetPressDown(Controller.DeviceRelation.Leftmost, Controller.ButtonMask.Trigger))
+            actionController.Update();
+
+            if (actionController.IsActionStart(ActionController.ActionType.Grip))
             {
-                Debug.Log("Left trigger pressed!");
+                Debug.Log("BlastonCameraPlugin - Grip action started");
             }
 
-            if (GetPressDown(Controller.DeviceRelation.Leftmost, Controller.ButtonMask.Grip))
+            if (actionController.IsActionEnd(ActionController.ActionType.Grip))
             {
-                Debug.Log("Left grip pressed!");
+                Debug.Log("BlastonCameraPlugin - Grip action ended");
             }
 
-            if (GetPressDown(Controller.DeviceRelation.Leftmost, EVRButtonId.k_EButton_A))
+            if (actionController.IsActionStart(ActionController.ActionType.Pinch))
             {
-                Debug.Log("Left A pressed!");
+                Debug.Log("BlastonCameraPlugin - Pinch action started");
             }
 
-            if (GetPressDown(Controller.DeviceRelation.Rightmost, Controller.ButtonMask.Trigger))
+            if (actionController.IsActionEnd(ActionController.ActionType.Pinch))
             {
-                Debug.Log("Right trigger pressed!");
-            }
-
-            if (GetPressDown(Controller.DeviceRelation.Rightmost, Controller.ButtonMask.Grip))
-            {
-                Debug.Log("Right grip pressed!");
+                Debug.Log("BlastonCameraPlugin - Pinch action ended");
             }
         }
 

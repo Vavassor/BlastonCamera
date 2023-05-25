@@ -56,16 +56,6 @@
       <Private>False</Private>
       <SpecificVersion>False</SpecificVersion>
     </Reference>
-    <Reference Include="UnityEngine.InputLegacyModule">
-      <HintPath>UnityEngine.InputLegacyModule.dll</HintPath>
-      <Private>False</Private>
-      <SpecificVersion>False</SpecificVersion>
-    </Reference>
-    <Reference Include="UnityEngine.XRModule">
-      <HintPath>UnityEngine.XRModule.dll</HintPath>
-      <Private>False</Private>
-      <SpecificVersion>False</SpecificVersion>
-    </Reference>
     <Reference Include="Valve.VR">
       <HintPath>openvr_api.dll</HintPath>
       <Private>False</Private>
@@ -73,12 +63,12 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ActionController.cs" />
     <Compile Include="BlastonCameraPlugin.cs" />
     <Compile Include="Config\Config.cs" />
     <Compile Include="Config\ConfigFileLoader.cs" />
     <Compile Include="Config\V1\SchemaV1Validator.cs" />
     <Compile Include="Config\V1\ConfigJsonV1Loader.cs" />
-    <Compile Include="Controller.cs" />
     <Compile Include="Easing.cs" />
     <Compile Include="Motions\IMotion.cs" />
     <Compile Include="Motions\OrbitMotion.cs" />
