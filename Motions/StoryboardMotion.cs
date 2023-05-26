@@ -74,9 +74,9 @@ namespace BlastonCameraBehaviour.Motions
             }
             else
             {
-                if (elapsedTime > CurrentShot.duration)
+                if (elapsedTime > CurrentShot.duration || ActionController.Instance.aAction.IsStarted)
                 {
-                    elapsedTime -= CurrentShot.duration;
+                    elapsedTime = 0.0;
                     if (transition != null)
                     {
                         NextShot.motion.Reset();

@@ -19,8 +19,6 @@ using System.IO;
 using System;
 using UnityEngine;
 using BlastonCameraBehaviour.Config;
-using Valve.VR;
-using BOLL7708;
 
 namespace BlastonCameraBehaviour
 {
@@ -80,85 +78,7 @@ namespace BlastonCameraBehaviour
                 Debug.LogError(e);
             }
 
-            EasyOpenVRSingleton.Instance.RegisterActionSet("/actions/vavscameraplugin");
-            EasyOpenVRSingleton.Instance.RegisterDigitalAction("/actions/vavscameraplugin/in/grabpinch", OnGrabPinch);
-            EasyOpenVRSingleton.Instance.RegisterDigitalAction("/actions/vavscameraplugin/in/grabgrip", OnGrabGrip);
-            EasyOpenVRSingleton.Instance.RegisterDigitalAction("/actions/vavscameraplugin/in/testa", OnPressA);
-            EasyOpenVRSingleton.Instance.RegisterDigitalAction("/actions/vavscameraplugin/in/testb", OnPressB);
-            EasyOpenVRSingleton.Instance.RegisterDigitalAction("/actions/vavscameraplugin/in/testx", OnPressX);
-            EasyOpenVRSingleton.Instance.RegisterDigitalAction("/actions/vavscameraplugin/in/testy", OnPressY);
-        }
-
-        void OnGrabGrip(InputDigitalActionData_t actionData, EasyOpenVRSingleton.InputActionInfo info)
-        {
-            if (actionData.bState)
-            {
-                Debug.Log("BlastonCameraPlugin - Grip action started. path: " + info.path);
-            }
-            else
-            {
-                Debug.Log("BlastonCameraPlugin - Grip action ended. path: " + info.path);
-            }
-        }
-
-        void OnGrabPinch(InputDigitalActionData_t actionData, EasyOpenVRSingleton.InputActionInfo info)
-        {
-            if (actionData.bState)
-            {
-                Debug.Log("BlastonCameraPlugin - Pinch action started. path: " + info.path);
-            }
-            else
-            {
-                Debug.Log("BlastonCameraPlugin - Pinch action ended. path: " + info.path);
-            }
-        }
-
-        void OnPressA(InputDigitalActionData_t actionData, EasyOpenVRSingleton.InputActionInfo info)
-        {
-            if (actionData.bState)
-            {
-                Debug.Log("BlastonCameraPlugin - A action started. path: " + info.path);
-            }
-            else
-            {
-                Debug.Log("BlastonCameraPlugin - A action ended. path: " + info.path);
-            }
-        }
-
-        void OnPressB(InputDigitalActionData_t actionData, EasyOpenVRSingleton.InputActionInfo info)
-        {
-            if (actionData.bState)
-            {
-                Debug.Log("BlastonCameraPlugin - B action started. path: " + info.path);
-            }
-            else
-            {
-                Debug.Log("BlastonCameraPlugin - B action ended. path: " + info.path);
-            }
-        }
-
-        void OnPressX(InputDigitalActionData_t actionData, EasyOpenVRSingleton.InputActionInfo info)
-        {
-            if (actionData.bState)
-            {
-                Debug.Log("BlastonCameraPlugin - X action started. path: " + info.path);
-            }
-            else
-            {
-                Debug.Log("BlastonCameraPlugin - X action ended. path: " + info.path);
-            }
-        }
-
-        void OnPressY(InputDigitalActionData_t actionData, EasyOpenVRSingleton.InputActionInfo info)
-        {
-            if (actionData.bState)
-            {
-                Debug.Log("BlastonCameraPlugin - Y action started. path: " + info.path);
-            }
-            else
-            {
-                Debug.Log("BlastonCameraPlugin - Y action ended. path: " + info.path);
-            }
+            ActionController.Instance.Initialize();
         }
 
         // OnSettingsDeserialized is called only when the user has changed camera profile or when the.
@@ -180,13 +100,75 @@ namespace BlastonCameraBehaviour
         // and has not been updated yet. If that is a concern, it is recommended to use OnLateUpdate instead.
         public void OnUpdate()
         {
+            ActionController.Instance.Update();
+
             if (config.motions != null)
             {
                 Transform camera = config.motions["default"].Transform(Time.deltaTime);
                 _helper.UpdateCameraPose(camera.position, camera.rotation, _settings.fov);
             }
 
-            EasyOpenVRSingleton.Instance.UpdateActionStates();
+            /*
+            if (ActionController.Instance.aAction.IsStarted)
+            {
+                Debug.Log("BlastonCameraPlugin - A action started");
+            }
+
+            if (ActionController.Instance.aAction.IsEnded)
+            {
+                Debug.Log("BlastonCameraPlugin - A action ended");
+            }
+
+            if (ActionController.Instance.bAction.IsStarted)
+            {
+                Debug.Log("BlastonCameraPlugin - B action started");
+            }
+
+            if (ActionController.Instance.bAction.IsEnded)
+            {
+                Debug.Log("BlastonCameraPlugin - B action ended");
+            }
+
+            if (ActionController.Instance.xAction.IsStarted)
+            {
+                Debug.Log("BlastonCameraPlugin - X action started");
+            }
+
+            if (ActionController.Instance.xAction.IsEnded)
+            {
+                Debug.Log("BlastonCameraPlugin - X action ended");
+            }
+
+            if (ActionController.Instance.yAction.IsStarted)
+            {
+                Debug.Log("BlastonCameraPlugin - Y action started");
+            }
+
+            if (ActionController.Instance.yAction.IsEnded)
+            {
+                Debug.Log("BlastonCameraPlugin - Y action ended");
+            }
+
+            if (ActionController.Instance.grabGripAction.IsStarted)
+            {
+                Debug.Log("BlastonCameraPlugin - Grip action started");
+            }
+
+            if (ActionController.Instance.grabGripAction.IsEnded)
+            {
+                Debug.Log("BlastonCameraPlugin - Grip action ended");
+            }
+
+            if (ActionController.Instance.grabPinchAction.IsStarted)
+            {
+                Debug.Log("BlastonCameraPlugin - Pinch action started");
+            }
+
+            if (ActionController.Instance.grabPinchAction.IsEnded)
+            {
+                Debug.Log("BlastonCameraPlugin - Pinch action ended");
+            }
+            */
         }
 
         // OnLateUpdate is called after OnUpdate also everyframe and has a higher chance that transform updates are more recent.

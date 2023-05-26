@@ -58,11 +58,6 @@
       <Private>False</Private>
       <SpecificVersion>False</SpecificVersion>
     </Reference>
-    <Reference Include="Valve.VR">
-      <HintPath>openvr_api.dll</HintPath>
-      <Private>False</Private>
-      <SpecificVersion>False</SpecificVersion>
-    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ActionController.cs" />
@@ -72,7 +67,6 @@
     <Compile Include="Config\V1\SchemaV1Validator.cs" />
     <Compile Include="Config\V1\ConfigJsonV1Loader.cs" />
     <Compile Include="Easing.cs" />
-    <Compile Include="EasyOpenVRSingleton.cs" />
     <Compile Include="Motions\IMotion.cs" />
     <Compile Include="Motions\OrbitMotion.cs" />
     <Compile Include="Motions\PlayerMotion.cs" />
